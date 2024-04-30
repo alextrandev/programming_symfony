@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -13,8 +14,13 @@ class CRUDListController extends AbstractController {
     }
 
     #[Route('/create', name: 'app_create', methods: ['POST'])]
-    public function create(): Response {
-        exit("To do: create a new task");
+    public function create(Request $req): Response {
+        $title = trim($req->get("title"));
+        if (empty($title)) {
+            return $this->redirectToRoute('app_crud_list');
+        }
+
+        exit($title);
     }
 
     #[Route('/update/{id<\d+>}', name: 'app_update')]
