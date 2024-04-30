@@ -12,8 +12,18 @@ class CRUDListController extends AbstractController {
         return $this->render('crudlist/index.html.twig');
     }
 
-    #[Route('/create', name: 'app_create')]
+    #[Route('/create', name: 'app_create', methods: ['POST'])]
     public function create(): Response {
         exit("To do: create a new task");
+    }
+
+    #[Route('/update/{id<\d+>}', name: 'app_update')]
+    public function update(int $id): Response {
+        exit("To do: update task $id ");
+    }
+
+    #[Route('/delete/{id<\d+>}', name: 'app_delete')]
+    public function delete(int $id): Response {
+        exit("To do: delete task $id ");
     }
 }
