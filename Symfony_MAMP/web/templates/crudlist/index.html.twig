@@ -17,10 +17,14 @@
 						<span class="task-list-item">{{ task.title }}</span>
 					</a>
 					<a onclick="return confirm('Are you sure to delete?')" href={{ path('app_delete', {'id':task.id} ) }}>
-						<span class="close">X</span>
+						<span class="close"><div></div></span>
 					</a>
 				</li>
 			{% endfor %}
 		</ul>
+
+		<footer>
+			<small>Copyright &copy; Alex Tran</small>
+		</footer>
 	</body>
 {% endblock %}
