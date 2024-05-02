@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,8 +12,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CRUDListController extends AbstractController {
     #[Route('/crud', name: 'app_crud_list')]
-    public function index(): Response {
-        return $this->render('crudlist/index.html.twig');
+    public function index(EntityManagerInterface $doctrine): Response {
+        $tasks = $doctrine->getRepository(TASK::class)->findAll();
+
+        // return $this->render('crudlist/index.html.twig', [
+        //     'tasks' => $tasks
+        // ]);
+
+        exit(print_r($tasks));
     }
 
     #[Route('/create', name: 'app_create', methods: ['POST'])]
