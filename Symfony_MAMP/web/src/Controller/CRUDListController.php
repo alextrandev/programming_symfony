@@ -13,13 +13,11 @@ use Symfony\Component\Routing\Attribute\Route;
 class CRUDListController extends AbstractController {
     #[Route('/crud', name: 'app_crud_list')]
     public function index(EntityManagerInterface $doctrine): Response {
-        $tasks = $doctrine->getRepository(TASK::class)->findAll();
+        $tasks = $doctrine->getRepository(TASK::class)->findAll(); // need to sort DES
 
-        // return $this->render('crudlist/index.html.twig', [
-        //     'tasks' => $tasks
-        // ]);
-
-        exit(print_r($tasks));
+        return $this->render('crudlist/index.html.twig', [
+            'tasks' => $tasks
+        ]);
     }
 
     #[Route('/create', name: 'app_create', methods: ['POST'])]
@@ -38,8 +36,16 @@ class CRUDListController extends AbstractController {
     }
 
     #[Route('/update/{id<\d+>}', name: 'app_update')]
-    public function update(int $id): Response {
-        exit("To do: update task $id ");
+    public function update(int $id, ManagerRegistry $doctrine): Response {
+        $task = $doctrine->getRepository(TASK::class)->find($id);
+        if ($task) {
+            $entityManager = $doctrine->getManager();
+            $task->setStatus(!$task->getStatus());
+            $entityManager->persist($task);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_crud_list');
     }
 
     #[Route('/delete/{id<\d+>}', name: 'app_delete')]
