@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Task;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +16,18 @@ class CRUDListController extends AbstractController {
     }
 
     #[Route('/create', name: 'app_create', methods: ['POST'])]
-    public function create(Request $req): Response {
+    public function create(Request $req, ManagerRegistry $doctrine): Response {
         $title = trim($req->get("title"));
-        if (empty($title)) {
-            return $this->redirectToRoute('app_crud_list');
+
+        if (!empty($title)) {
+            $entityManager = $doctrine->getManager();
+            $task = new Task();
+            $task->setTitle($title);
+            $entityManager->persist($task); // prepare for saving to db
+            $entityManager->flush(); //save (insert) to db
         }
 
-        exit($title);
+        return $this->redirectToRoute('app_crud_list');
     }
 
     #[Route('/update/{id<\d+>}', name: 'app_update')]
