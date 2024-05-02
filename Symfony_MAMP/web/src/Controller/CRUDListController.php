@@ -49,7 +49,14 @@ class CRUDListController extends AbstractController {
     }
 
     #[Route('/delete/{id<\d+>}', name: 'app_delete')]
-    public function delete(int $id): Response {
-        exit("To do: delete task $id ");
+    public function delete(int $id, ManagerRegistry $doctrine): Response {
+        $task = $doctrine->getRepository(TASK::class)->find($id);
+        if ($task) {
+            $entityManager = $doctrine->getManager();
+            $entityManager->remove($task);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_crud_list');
     }
 }
